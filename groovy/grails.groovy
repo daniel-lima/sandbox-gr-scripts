@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 the original author or authors.
+ * Copyright 2010-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,7 @@
  */
 // println args
 def baseDir = args[0]
-def argList = System.properties["os.name"].contains("Windows")? ["cmd",
-"/c", "grails.bat"]: ["grails"]
+def argList = System.properties["os.name"].contains("Windows")? ["cmd", "/c", "grails.bat"]: ["grails"]
 argList.addAll((args as List).subList(1, args.length))
 argList << "--non-interactive"
 
@@ -34,18 +33,18 @@ println "command ${argList}"
 def process = argList.execute(null, new File(baseDir))
 
 [
-  [System.out, process.in],
-  [System.err, process.err]
+    [System.out, process.in],
+    [System.err, process.err]
 ].eachWithIndex {streams, idx ->
-  def r = {
-    def input = new InputStreamReader(streams[1])
-    def output = streams[0]
-    input.eachLine {line->
-      output.println(line)
-    }
-  } as Runnable
-  def t = new Thread(r)
-  t.start()
+    def r = {
+        def input = new InputStreamReader(streams[1])
+        def output = streams[0]
+        input.eachLine {line->
+            output.println(line)
+        }
+    } as Runnable
+    def t = new Thread(r)
+    t.start()
 }
 
 process.waitFor()
