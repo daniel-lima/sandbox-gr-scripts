@@ -90,10 +90,16 @@ target(default: 'Generates Eclipse project files') {
             def dir = new File(d)
             if (dir.exists()) {
                 for (file in dir.listFiles()) {
-                    if (file.isDirectory()) {
+                    if (file.isDirectory() && !file.name.startsWith('.')) {
                         w << "    <classpathentry kind=\"src\" path=\"${dir.name}/${file.name}\"/>${nl}"
                     }
                 }
+            }
+        }
+
+        new File('lib').eachFile {file->
+            if (file.name.endsWith('.jar')) {
+                w << "    <classpathentry kind=\"lib\" path=\"lib/${file.name}\"/>${nl}"
             }
         }
         
@@ -111,7 +117,7 @@ target(default: 'Generates Eclipse project files') {
         }
         
         w << "   <classpathentry kind=\"var\" path=\"DOT_GRAILS_HOME_${grailsVersion}/projects/${projectName}/plugin-classes\" sourcepath=\"/DOT_GRAILS_HOME_${grailsVersion}/projects/${projectName}/plugins\"/>${nl}\
-<classpathentry kind=\"output\" path=\"web-app/WEB-INF/classes\"/>${nl}"
+<classpathentry kind=\"output\" path=\"target/classes\"/>${nl}"
         w << '</classpath>'
     }
 
