@@ -97,9 +97,13 @@ target(default: 'Generates Eclipse project files') {
             }
         }
 
-        new File('lib').eachFile {file->
-            if (file.name.endsWith('.jar')) {
-                w << "    <classpathentry kind=\"lib\" path=\"lib/${file.name}\"/>${nl}"
+        
+        def libDir = new File('lib')
+        if (libDir.exists()) {
+            libDir.eachFile {file->
+                if (file.name.endsWith('.jar')) {
+                    w << "    <classpathentry kind=\"lib\" path=\"lib/${file.name}\"/>${nl}"
+                }
             }
         }
         
